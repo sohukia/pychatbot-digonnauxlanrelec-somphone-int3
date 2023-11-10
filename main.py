@@ -13,4 +13,4 @@ if __name__ == '__main__':
     presidents: list[str] = pres_name.extract_presidents('./speeches')
     pres_name.display_entire_name(presidents)
 
-    file_c.copy_files(utils.list_files('./speeches'))
+    file_c.copy_files(utils.list_files('./speeches', '.txt'))
