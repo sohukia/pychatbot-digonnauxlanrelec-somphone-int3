@@ -1,16 +1,16 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+import src.president_names as pres_name
+import src.file_cleaner as file_c
+import src.utils as utils
 
 
-# Press the green button in the gutter to run the script.
+"""
+    Main program
+    Import all files and executes them all along
+"""
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    presidents: list[str] = pres_name.extract_presidents('./speeches')
+    pres_name.display_entire_name(presidents)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    file_c.copy_files(utils.list_files('./speeches'))
