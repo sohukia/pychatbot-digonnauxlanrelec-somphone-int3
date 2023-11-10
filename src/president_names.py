@@ -7,7 +7,7 @@ def extract_presidents(path: str) -> list[str]:
     :param path:str
     :return: list of presidents names
     """
-    file_list = utils.list_files(path)
+    file_list: list[str] = utils.list_files(path)
     file_list = [utils.clear_filename(file) for file in file_list]
     file_list = utils.del_duplicates(file_list)
 
