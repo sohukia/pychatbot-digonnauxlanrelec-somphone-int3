@@ -24,13 +24,13 @@ def del_duplicates(filenames: list[str]) -> list[str]:
     return list(set(filenames))
 
 
-def list_files(path: str) -> list[str]:
+def list_files(path: str, ext: str) -> list[str]:
     """
     List the files within the given directory path.
+    :param ext: extension specified
     :param path: directory path
     :return: List of file absolute paths
     """
-    ext: str = '.txt'
     path: str = os.path.abspath(path)
     file_list: list[str] = []
     for file in os.listdir(path):
