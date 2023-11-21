@@ -52,6 +52,7 @@ def term_frequency_all(path: str) -> dict:
     return term_frequency(text_across_documents)
 
 
+def tf_idf(
 """
 For each word within the term_frequency all
 Find if it appears at least once in each document frequency (list document frequency) then compute the inverse of this proportion

@@ -20,5 +20,9 @@ if __name__ == '__main__':
 
     # compute tf of each document
     documents_tf = tf_idf.list_document_tf('./cleaned')
-    print(documents_tf)
+
+    # compute tf with gouped document
+    cleaned_tf = tf_idf.term_frequency_all('./cleaned')
+    
+        
 
