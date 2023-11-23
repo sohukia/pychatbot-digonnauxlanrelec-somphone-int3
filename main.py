@@ -24,5 +24,3 @@ if __name__ == '__main__':
     # compute tf with gouped document
     cleaned_tf = tf_idf.term_frequency_all('./cleaned')
     
-        
-
