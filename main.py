@@ -12,7 +12,7 @@ import src.utils as utils
 
 if __name__ == '__main__':
     # print president names
-    presidents: list[str] = pres_name.extract_presidents('./speeches')
+    presidents = pres_name.extract_presidents('./speeches')
     pres_name.display_entire_name(presidents)
 
     # copy and clear files
@@ -24,3 +24,5 @@ if __name__ == '__main__':
     # compute tf with gouped document
     cleaned_tf = tf_idf.term_frequency_all('./cleaned')
     
+    # compute idf
+    cleaned_idf = tf_idf.inverse_document_frequency(cleaned_tf)
