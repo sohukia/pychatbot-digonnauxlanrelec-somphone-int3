@@ -76,17 +76,6 @@ def inverse_document_frequency(path: str) -> dict:
     return inv_doc_freq        
 
 
-
-def tf_idf_final(term_frequency: dict, inverse_document_frequency: dict, corpus: list[str]) -> dict:
-    tf_idf = term_frequency.copy()
-    word_set = compute_word_set(corpus)
-
-    for word in word_set:
-        for i in range(len(corpus)):
-            tf_idf[i][word] = term_frequency[i][word] * inverse_document_frequency[word]
-    return tf_idf
-
-
 def tf_idf_final(path: str) -> dict:
     files = utils.list_files(path, '.txt')
     corpus = utils.cat_files(files)
