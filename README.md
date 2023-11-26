@@ -8,6 +8,12 @@ Configure usage of `python3.11` with script `main.py`. Ensure the `Emulate termi
 - Within a terminal: type `python3 main.py`
 - In VsCode: with `python` extension installed, open `main.py` and click `run`
 
+#### To start using the chatbot run the command `--help`, it will give the main commands and how to use them.
+
+### Link of the Github repository [here](https://github.com/sohukia/pychatbot-digonnauxlanrelec-somphone-int3.git)
+
+
+### Project description
 This project is about text analysis. This project will allow you to understand some basic concepts used in text 
 processing and help you understand one of the methods used in developing chatbots and/or generative 
 artificial intelligences such as ChatGPT. 
