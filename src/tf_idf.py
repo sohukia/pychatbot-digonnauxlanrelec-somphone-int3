@@ -48,13 +48,11 @@ def term_frequency_corpus(corpus: list[str]) -> dict:
 
 def inverse_document_frequency(path: str) -> dict:
     """
-    For each word within the term_frequency_all
-    Find if it appears at least once in each document frequency (list document frequency) then compute the inverse of this proportion
-    (count the number of document)
-    Finaly compute the logarithm base 10 of this value and associate it with each word.
-    Each word should have at least one occurrence across all files. 
-    :param path: path of the directory to compute idf
-    :return: inverse document frequency of the corpus of files in the given directory
+    For each word within the term_frequency_all Find if it appears at least once in each document frequency (list
+    document frequency) then compute the inverse of this proportion (count the number of document) Finally compute
+    the logarithm base 10 of this value and associate it with each word. Each word should have at least one
+    occurrence across all files. :param path: path of the directory to compute idf :return: inverse document
+    frequency of the corpus of files in the given directory
     """
     inv_doc_freq = {}
     all_texts = []

@@ -33,5 +33,6 @@ def display_entire_name(president_names: list[str]) -> str:
 
     return final
 
+
 def index_president(president_names: list[str], president: str) -> int:
     return president_names.index(president)

@@ -1,4 +1,12 @@
-# Project_chatbot
+# Project Chatbot
+## Project by DL.Brewen and S.Isabelle
+
+### How to use
+
+- In PyCharm :
+Configure usage of `python3.11` with script `main.py`. Ensure the `Emulate terminal in output console` is enabled to avoid error message.
+- Within a terminal: type `python3 main.py`
+- In VsCode: with `python` extension installed, open `main.py` and click `run`
 
 This project is about text analysis. This project will allow you to understand some basic concepts used in text 
 processing and help you understand one of the methods used in developing chatbots and/or generative 
