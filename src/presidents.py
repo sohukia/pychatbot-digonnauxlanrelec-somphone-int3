@@ -29,3 +29,7 @@ def display_entire_name(president_names: list[str]) -> None:
     }
     for president_name in president_names:
         print(names[president_name], president_name)
+
+
+def index_president(president_names: list[str], president: str) -> int:
+    return president_names.index(president)
