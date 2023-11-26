@@ -14,7 +14,7 @@ def extract_presidents(path: str) -> list[str]:
     return file_list
 
 
-def display_entire_name(president_names: list[str]) -> None:
+def display_entire_name(president_names: list[str]) -> str:
     """
     Associate each president name with its first name
     :param president_names:  str
@@ -27,9 +27,11 @@ def display_entire_name(president_names: list[str]) -> None:
         'Hollande': 'François',
         'Sarkozy': 'Nicolas'
     }
+    final = ""
     for president_name in president_names:
-        print(names[president_name], president_name)
+        final += "\t" + names[president_name] + " " + president_name + "\n"
 
+    return final
 
 def index_president(president_names: list[str], president: str) -> int:
     return president_names.index(president)
