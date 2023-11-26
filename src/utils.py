@@ -17,11 +17,15 @@ def clear_filename(filename: str) -> str:
 
 def del_duplicates(filenames: list[str]) -> list[str]:
     """
-    Delete duplicate names within the list of president list, do not keep the same order
+    Delete duplicate names within the list of president list
     :param filenames: the names of presidents, with duplicates
     :return: the name of presidents, without duplicates
     """
-    return list(set(filenames))
+    file_names = []
+    for filename in filenames:
+        if filename not in file_names:
+            file_names.append(filename)
+    return file_names
 
 
 def list_files(path: str, ext: str) -> list[str]:
@@ -40,6 +44,17 @@ def list_files(path: str, ext: str) -> list[str]:
     return file_list
 
 
+def cat_files(list_of_files: list[str]) -> list[str]:
+    cat_file = []
+    for file in list_of_files:
+        with open(file, "r", encoding='utf-8') as f:
+            content = f.readlines()
+            content = ' '.join(map(lambda x: x.removesuffix('\n'), content))
+            cat_file.append(content)
+
+    return cat_file
+
+        
 def create_directory(name: str) -> None:
     """
     Check whether the directory exists or not and create it if necessary
@@ -54,3 +69,4 @@ def path_separator() -> str:
     Ensure right file separator is used across Windows or Unix-like OSes
     """
     return '\\' if platform.system() == "Windows" else '/'
+
