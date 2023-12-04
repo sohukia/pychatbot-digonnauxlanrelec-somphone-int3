@@ -45,11 +45,11 @@ class Menu:
     def help(self, command="") -> None:
         if command == "":
             self.message = """
-        L1 international class chatbot project of SOMPHONE Isabelle and DIGONNAUX--LANRELEC Brewen.
+        L1 international class chatbot project by SOMPHONE Isabelle and DIGONNAUX--LANRELEC Brewen.
         To use command, type any command followed by its parameters.
+        Type --help [command] (without the double dash) to have more information on this command.
         Available commands:
         """ + "\n\t".join(self.commands) + """
-        Type --help [command] (without the double dash) to have more information on this command.
         """
             return
         if command == "president":
@@ -57,6 +57,7 @@ class Menu:
         --president display: will display the list of the president names in the cleaned repository
         --president most_repeated: will ask you to enter a president name and then display its most repeated word
         """
+            return
 
         if command == "tf_idf":
             self.message = f"""
@@ -149,6 +150,7 @@ class Menu:
     def mainloop(self) -> None:
         while True:
             self.clear()
+            self.help()
             self.greet()
             actions = input("\t>_").split()
             command = actions[::2]

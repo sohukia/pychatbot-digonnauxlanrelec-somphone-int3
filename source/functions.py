@@ -1,22 +1,26 @@
+import platform
 import math
 import os
-import platform
 
 
 class Functions:
     def __init__(self):
         # copy files with cleared content
         self.copy_files(self.list_files("./speeches", "txt"))
-
         self.file_list: list[str] = self.list_files("./cleaned", "txt")
+
+        # president data
+        self.president_names: dict = {}
+        self.president_list_with_duplicates: list[str] = self.extract_presidents()
+        self.president_list = self.del_duplicates(self.president_list_with_duplicates)
+        self.create_president_dictionary()
+
+        # tf idf computations
         self.corpus: list[str] = self.cat_file(self.file_list)
         self.n_document: int = len(self.corpus)
-
         self.word_set: set = self.compute_word_set(self.corpus)
-
         self.tf: dict = self.term_frequency_corpus()
         self.idf: dict = self.inverse_document_frequency()
-
         self.matrix: dict = self.td_idf()
 
     @staticmethod
@@ -59,21 +63,21 @@ class Functions:
         return without_number
 
     @staticmethod
-    def del_duplicates(filenames: list[str]) -> list[str]:
+    def del_duplicates(elements: list[str]) -> list[str]:
         """
-        The del_duplicates function takes a list of filenames and returns a new list with the duplicates removed.
+        The del_duplicates function takes a list of elements and returns a new list with the duplicates removed.
 
         Args:
-            filenames: list[str]: Define the list of filenames that will be passed to the function
+            elements: list[str]: Define the list of filenames that will be passed to the function
 
         Returns:
             A list of strings
         """
-        file_names: list[str] = []
-        for filename in filenames:
-            if filename not in file_names:
-                file_names.append(filename)
-        return file_names
+        output_elements: list[str] = []
+        for element in elements:
+            if element not in output_elements:
+                output_elements.append(element)
+        return output_elements
 
     @staticmethod
     def cat_file(file_list: list[str]) -> list[str]:
@@ -184,12 +188,13 @@ class Functions:
             with open(new_filename, 'w', encoding='utf-8') as output_file:
                 output_file.writelines(content)
 
-    def compute_word_set(self, corpus: list[str]) -> set:
+    # TF IDF FEATURES
+    @staticmethod
+    def compute_word_set(corpus: list[str]) -> set:
         """
         The compute_word_set function takes a corpus of documents and returns the set of all words in the corpus.
 
         Args:
-            self: Represent the instance of the object itself
             corpus: list[str]: Pass the corpus to the function
 
         Returns:
@@ -250,6 +255,35 @@ class Functions:
                 matrix[i][word] = self.tf[i][word] * self.idf[word]
         return matrix
 
+    # PRESIDENT RELATED FEATURES
+    def extract_presidents(self) -> list[str]:
+        """
+        The extract_presidents function takes a list of file names and returns a list of the presidents' names.
+        Watch out for duplicates that won't be deleted.
+        Args:
+            self: Refer to the instance of the class
+
+        Returns:
+            A list of strings
+        """
+        file_list: list[str] = [self.clear_filename(file) for file in self.file_list]
+        
+        return file_list
+
+    def create_president_dictionary(self) -> None:
+        """
+        The create_president_dictionary function creates a dictionary of the presidents' first names.
+        """
+        self.president_names: dict = {
+            'Macron': 'Emmanuel',
+            'Giscard dEstaing': 'Valery',
+            'Chirac': 'Jacques',
+            'Mitterrand': 'François',
+            'Hollande': 'François',
+            'Sarkozy': 'Nicolas'
+        }
+
+    # USAGE FEATURES
     def compute_least_important_words(self) -> set[str]:
         """
         The compute_least_important_words function takes the matrix of documents and words,
@@ -277,3 +311,117 @@ class Functions:
                 least_important_words.add(word)
 
         return least_important_words
+
+    def compute_highest_score(self) -> set[str]:
+        """
+        The compute_highest_score function computes the highest score of each document and returns a set containing all words
+        with the highest score.
+        Uses a set instead of a list to avoid duplicate word.
+
+        Args:
+            self: Refer to the instance of the class
+
+        Returns:
+            The set of words with the highest score
+        """
+        highest: set = set()
+        highest_scores: list[float] = []
+        for text in self.matrix.values():
+            maxi_score: float = max(text.values())
+            highest_scores.append(maxi_score)
+        highest_score: float = max(highest_scores)
+        for i in range(self.n_document):
+            for word, score in self.matrix[i].items():
+                if score == highest_score:
+                    highest.add(word)
+        return highest
+
+    def search_word(self, word_to_search: str) -> tuple[list[int], int]:
+        """
+        The search_word function takes a word as input and looks for a word into the corpus. Find both
+        who said this word_to_search and who said it the most.
+        Uses a basic maximum comparison algorithm with a list to keep track of where the word was seen.
+
+        Args:
+            self: Access the attributes and methods of the class
+            word_to_search: str: Search for the word in the documents
+
+        Returns:
+            A tuple with two elements:
+        """
+        found_index: list[int] = []
+        maxi_index_document: int = 0
+        maxi_score: int = 0
+        for i in range(self.n_document):
+            for word, score in self.tf[i].items():
+                if word == word_to_search and score > 0:
+                    if score > maxi_score:
+                        maxi_score = score
+                        maxi_index_document = i
+                    found_index.append(i)
+        return found_index, maxi_index_document
+
+    def most_repeated_word_by(self, president_index: int) -> str:
+        """
+        The most_repeated_word_by function takes in a president index and returns the word that was used most frequently by
+        that president. It does this by iterating through all the words in the tf dictionary for that president, and keeping
+        track of which word has been repeated most often.
+
+        Args:
+            self: Refer to the object itself
+            president_index: int: Specify which president we want to find the most repeated word for
+
+        Returns:
+            The word that is most repeated by the president at index president_index
+        """
+        maxi_word: str = ""
+        maxi_score: float = 0
+        for word, score in self.tf[president_index].items():
+            if score > maxi_score:
+                maxi_score = score
+                maxi_word = word
+        return maxi_word
+
+    def first_to_say(self, word_to_search: str) -> int:
+        """
+        The first_to_say function takes a word as an argument and returns the index of the document in which it first appears.
+        If the word does not appear in any documents, then - 1 is returned.
+
+        Args:
+            self: Represent the instance of the class
+            word_to_search: str: Specify the word to search for in the documents
+
+        Returns:
+            The index of the first document that contains the word_to_search
+        """
+        for i in range(self.n_document):
+            for word, score in self.tf[i].items():
+                if word == word_to_search and score > 0:
+                    return i
+        return -1
+    
+    def word_said_by_all_presidents(self) -> list[str]:
+        """
+        Look for the word that every president said excepted the unimportant words.
+        Search for all words which have a tf score more than 1 in throughout corpus and a tf_df score more than 0.
+        
+        Returns:
+            A list of words that every president said
+        """
+        common_words: list[str] = []
+        
+        for i in range(self.n_document):
+            for word, score in self.tf[i].items():
+                if score > 0 and word not in common_words:
+                    common_words.append(word)
+                    
+                    
+                    
+                    
+        ### USE UNIMPORTANT WORD SET AND TAKE THE DIFFERENCE BETWEEN WORD SET AND THIS. THEN COMPUTE IF IT APPEARS IN EVERY DOCUMENT
+        return set(common_words)
+        
+        # for word, score in self.idf.items():
+        #     if score > 0 and all(doc[word] > 0 for doc in self.tf.values()):
+        #         common_words.append(word)
+        # return common_words
