@@ -5,6 +5,17 @@ import os
 
 class Functions:
     def __init__(self):
+        """
+        The __init__ function is the constructor for the class. It initializes all the attributes
+        that are used in this class.
+        The first thing it does is copy files with cleared content, which means that it copies
+        all the text files from speeches to cleaned and removes any non-alphabetical characters from them.
+        Then, it creates a list called file_list which contains every file name
+        in cleaned (which should be every speech).
+        Next, we create a dictionary called president_names where each key is a president's name and each value
+        is an empty list (this will be filled later). We also create two lists: one
+        """
+
         # copy files with cleared content
         self.copy_files(self.list_files("./speeches", "txt"))
         self.file_list: list[str] = self.list_files("./cleaned", "txt")
@@ -19,6 +30,7 @@ class Functions:
         self.corpus: list[str] = self.cat_file(self.file_list)
         self.n_document: int = len(self.corpus)
         self.word_set: set = self.compute_word_set(self.corpus)
+
         self.tf: dict = self.term_frequency_corpus()
         self.idf: dict = self.inverse_document_frequency()
         self.matrix: dict = self.td_idf()
@@ -150,7 +162,7 @@ class Functions:
                         final_word += word[i]
                     # if the char is ' or -, check if it is betweens to char or not
                     elif word[(i - 1) % len(word)].isalpha() and (word[i] == '-' or word[i] == '\'') and word[
-                            (i + 1) % len(word)].isalpha():
+                        (i + 1) % len(word)].isalpha():
                         final_word += ' '
                 final_line.append(final_word)
             final_text.append((' '.join(final_line)).strip() + '\n')
@@ -249,7 +261,7 @@ class Functions:
         Returns:
             A dictionary of the tf-idf matrix
         """
-        matrix: dict = self.tf.copy()
+        matrix: dict = dict.fromkeys([i for i in range(self.n_document)], {})
         for word in self.word_set:
             for i in range(self.n_document):
                 matrix[i][word] = self.tf[i][word] * self.idf[word]
@@ -267,7 +279,7 @@ class Functions:
             A list of strings
         """
         file_list: list[str] = [self.clear_filename(file) for file in self.file_list]
-        
+
         return file_list
 
     def create_president_dictionary(self) -> None:
@@ -300,16 +312,14 @@ class Functions:
         least_important_words: set[str] = set()
         word_scores: dict = {}
 
-        for doc_id, doc_matrix in self.matrix.items():
+        for doc_matrix in self.matrix.values():
             for word, score in doc_matrix.items():
                 if word not in word_scores:
                     word_scores[word] = []
                 word_scores[word].append(score)
-
         for word, scores in word_scores.items():
             if all(i == 0 for i in scores):
                 least_important_words.add(word)
-
         return least_important_words
 
     def compute_highest_score(self) -> set[str]:
@@ -330,6 +340,7 @@ class Functions:
             maxi_score: float = max(text.values())
             highest_scores.append(maxi_score)
         highest_score: float = max(highest_scores)
+        del highest_scores
         for i in range(self.n_document):
             for word, score in self.matrix[i].items():
                 if score == highest_score:
@@ -399,8 +410,8 @@ class Functions:
                 if word == word_to_search and score > 0:
                     return i
         return -1
-    
-    def word_said_by_all_presidents(self) -> list[str]:
+
+    def words_said_by_all_presidents(self) -> set[str]:
         """
         Look for the word that every president said excepted the unimportant words.
         Search for all words which have a tf score more than 1 in throughout corpus and a tf_df score more than 0.
@@ -408,20 +419,17 @@ class Functions:
         Returns:
             A list of words that every president said
         """
-        common_words: list[str] = []
-        
-        for i in range(self.n_document):
-            for word, score in self.tf[i].items():
-                if score > 0 and word not in common_words:
-                    common_words.append(word)
-                    
-                    
-                    
-                    
-        ### USE UNIMPORTANT WORD SET AND TAKE THE DIFFERENCE BETWEEN WORD SET AND THIS. THEN COMPUTE IF IT APPEARS IN EVERY DOCUMENT
-        return set(common_words)
-        
-        # for word, score in self.idf.items():
-        #     if score > 0 and all(doc[word] > 0 for doc in self.tf.values()):
-        #         common_words.append(word)
-        # return common_words
+        common_words: set[str] = set()
+        word_scores: dict = {}
+
+        for doc_score in self.tf.values():
+            for word, score in doc_score.items():
+                if word not in word_scores:
+                    word_scores[word] = []
+                word_scores[word].append(score)
+        for word, scores in word_scores.items():
+            # ensure that the word appears everywhere and is not unimportant
+            if all(i > 0 for i in scores) and word not in self.compute_least_important_words():
+                common_words.add(word)
+
+        return common_words
