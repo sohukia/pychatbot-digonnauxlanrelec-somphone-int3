@@ -4,16 +4,25 @@ import os
 
 
 class Functions:
+    """
+    WHY A CLASS:
+    The reason why we use a class is because we want to be able to call the same functions multiple times and reuse easily the data.
+    """ 
     def __init__(self):
         """
         The __init__ function is the constructor for the class. It initializes all the attributes
         that are used in this class.
         The first thing it does is copy files with cleared content, which means that it copies
         all the text files from speeches to cleaned and removes any non-alphabetical characters from them.
-        Then, it creates a list called file_list which contains every file name
-        in cleaned (which should be every speech).
-        Next, we create a dictionary called president_names where each key is a president's name and each value
-        is an empty list (this will be filled later). We also create two lists: one
+        
+        Next, we create dictionnaries about president : their name_surname, and the list of their name with duplicates
+        and another one without duplicate. The list with duplicate is useful to browse a word within the text and gather meta-data
+
+        Next, we create a list called corpus which contains the contents of every file in file_list.
+        
+        Next, we create a set called word_set which contains every word in the corpus.
+        
+        After that, we compute both tf of the corpus, it's idf and then the matrix td_idf
         """
 
         # copy files with cleared content
