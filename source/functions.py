@@ -1,7 +1,5 @@
-import platform
 import math
-import os
-
+import utils
 
 class Functions:
     """
@@ -24,158 +22,27 @@ class Functions:
         
         After that, we compute both tf of the corpus, it's idf and then the matrix td_idf
         """
+        
+        self.utils = utils.Utils()
 
         # copy files with cleared content
-        self.copy_files(self.list_files("./speeches", "txt"))
-        self.file_list: list[str] = self.list_files("./cleaned", "txt")
+        self.copy_files(self.utils.list_files("./speeches", "txt"))
+        self.file_list: list[str] = self.utils.list_files("./cleaned", "txt")
 
         # president data
         self.president_names: dict = {}
         self.president_list_with_duplicates: list[str] = self.extract_presidents()
-        self.president_list = self.del_duplicates(self.president_list_with_duplicates)
+        self.president_list = self.utils.del_duplicates(self.president_list_with_duplicates)
         self.create_president_dictionary()
 
         # tf idf computations
-        self.corpus: list[str] = self.cat_file(self.file_list)
+        self.corpus: list[str] = self.utils.cat_file(self.file_list)
         self.n_document: int = len(self.corpus)
         self.word_set: set = self.compute_word_set(self.corpus)
 
         self.tf: dict = self.term_frequency_corpus()
         self.idf: dict = self.inverse_document_frequency()
         self.matrix: dict = self.td_idf()
-
-    @staticmethod
-    def list_files(path: str, ext: str) -> list[str]:
-        """
-        The list_files function takes a path and an extension as arguments.
-        It returns a list of all files in the given directory with the given extension.
-
-        Args:
-            path: str: Specify the path to the directory that you want to list files from
-            ext: str: Specify the file extension that you want to search for
-
-        Returns:
-            A list of strings
-        """
-        path: str = os.path.abspath(path)
-        file_list: list[str] = []
-        for file in os.listdir(path):
-            if file.endswith(ext):
-                absolute_path: str = os.path.abspath(os.path.join(path, file))
-                file_list.append(absolute_path)
-        return file_list
-
-    @staticmethod
-    def clear_filename(filename: str) -> str:
-        """
-        The clear_filename function takes a filename as an argument and returns the name of the file without any numbers or underscores.
-            For example, if you pass in 'Nomination_Chirac1.txt', it will return 'Chirac'.
-
-        Args:
-            filename: str: Pass the filename to the function
-
-        Returns:
-            The filename without the underscore and extension
-
-        """
-        without_underscore: str = filename.split('_')[-1]
-        without_ext: str = without_underscore.split('.')[0]
-        without_number: str = ''.join([char for char in without_ext if not char.isdigit()])
-        return without_number
-
-    @staticmethod
-    def del_duplicates(elements: list[str]) -> list[str]:
-        """
-        The del_duplicates function takes a list of elements and returns a new list with the duplicates removed.
-
-        Args:
-            elements: list[str]: Define the list of filenames that will be passed to the function
-
-        Returns:
-            A list of strings
-        """
-        output_elements: list[str] = []
-        for element in elements:
-            if element not in output_elements:
-                output_elements.append(element)
-        return output_elements
-
-    @staticmethod
-    def cat_file(file_list: list[str]) -> list[str]:
-        """
-        The cat_file function takes a list of file names and returns a list of strings, where each string is the contents
-        of one file. The function should open each file in read mode, read all lines from the file into memory as a single
-        string (using .readlines()), then join those lines together into one long string using ' '.join(...). Finally, it
-        should return that long string.
-
-        Args:
-            file_list: list[str]: Pass in a list of files to be read
-
-        Returns:
-            A list of strings, where each string is the contents of a file
-        """
-        cat_file: list[str] = []
-        for file in file_list:
-            with open(file, 'r', encoding='utf-8') as f:
-                content: list[str] = f.readlines()
-                content_single_line: str = " ".join(map(lambda x: x.removesuffix('\n'), content))
-                cat_file.append(content_single_line)
-        return cat_file
-
-    @staticmethod
-    def create_directory(dir_name: str) -> None:
-        """
-        The create_directory function creates a directory with the name dir_name if not existing.
-
-        Args:
-            dir_name: str: Specify the name of the directory that will be created
-        """
-        if not os.path.exists(os.path.abspath(dir_name)):
-            os.mkdir(os.path.abspath(dir_name))
-
-    @staticmethod
-    def path_separator() -> str:
-        """
-        The path_separator function returns a string that is the path separator for the current operating system.
-
-        Returns:
-            The path separator for the current operating system
-
-        """
-        return '\\' if platform.system() == "Windows" else "/"
-
-    @staticmethod
-    def clear_content(text: list[str]) -> list[str]:
-        """
-        The clear_content function takes a list of strings as input and returns a list of strings.
-        It removes all non-alphanumeric characters from the text, except for '-' and ' when they are between two alphanumeric characters.
-
-        Args:
-            text: list[str]: Store the text to be cleaned
-
-        Returns:
-            A list of strings
-        """
-        final_text: list[str] = []
-        # browse each line
-        for line in text:
-            current_line: list[str] = line.split()
-            final_line: list[str] = []
-            # browse each word
-            for word in current_line:
-                final_word: str = ''
-                # browse each char
-                for i in range(len(word)):
-                    # check if the char is alphanumeric
-                    if word[i].isalnum():
-                        final_word += word[i]
-                    # if the char is ' or -, check if it is betweens to char or not
-                    elif word[(i - 1) % len(word)].isalpha() and (word[i] == '-' or word[i] == '\'') and word[
-                        (i + 1) % len(word)].isalpha():
-                        final_word += ' '
-                final_line.append(final_word)
-            final_text.append((' '.join(final_line)).strip() + '\n')
-        return final_text
 
     def copy_files(self, filenames: list[str]) -> None:
         """
@@ -188,12 +55,12 @@ class Functions:
             filenames: list[str]: Pass a list of filenames to the function
 
         """
-        self.create_directory("./cleaned")
+        self.utils.create_directory("./cleaned")
         for filename in filenames:
             # create new path for the copied files
-            file_name: list[str] = filename.split(self.path_separator())
+            file_name: list[str] = filename.split(self.utils.path_separator())
             file_name[-2] = "cleaned"
-            new_filename = self.path_separator().join(file_name)
+            new_filename = self.utils.path_separator().join(file_name)
             content: list[str] = []
 
             # extract content
@@ -203,13 +70,15 @@ class Functions:
                     content += [''.join(word.lower() for word in line)]
 
             # format content
-            content = self.clear_content(content)
+            content = self.utils.clear_content(content)
 
             # save formatted content into cleaned
             with open(new_filename, 'w', encoding='utf-8') as output_file:
                 output_file.writelines(content)
 
-    # TF IDF FEATURES
+    #############################
+    ##     TF IDF FEATURES     ##
+    #############################
     @staticmethod
     def compute_word_set(corpus: list[str]) -> set:
         """
@@ -276,7 +145,9 @@ class Functions:
                 matrix[i][word] = self.tf[i][word] * self.idf[word]
         return matrix
 
-    # PRESIDENT RELATED FEATURES
+    ################################
+    ## PRESIDENT RELATED FEATURES ##
+    ################################
     def extract_presidents(self) -> list[str]:
         """
         The extract_presidents function takes a list of file names and returns a list of the presidents' names.
@@ -287,7 +158,7 @@ class Functions:
         Returns:
             A list of strings
         """
-        file_list: list[str] = [self.clear_filename(file) for file in self.file_list]
+        file_list: list[str] = [self.utils.clear_filename(file) for file in self.file_list]
 
         return file_list
 
@@ -442,3 +313,61 @@ class Functions:
                 common_words.add(word)
 
         return common_words
+    
+    ###############################
+    ## CHATBOT RELATED FEATURES  ##
+    ###############################
+    def question_tokenization(self, question: str) -> set[str]:
+        """
+        Tokenize the question by splitting it into words.
+
+        Args:
+            question: The question to tokenize
+
+        Returns:
+            set[str]: the set of words in the question
+        """
+        output: list = question.lower().split()
+        # remove \n trailing char in the list of words cleaned from the question
+        output = list(map(lambda x: x.replace('\n', ''), self.utils.clear_content(output)))
+        if '' in output: output.remove('') # still unknown why there is an empty string in the list
+        return set(output)
+
+    def remove_useless_words(self, tokens: set[str]) -> set[str]:
+        """Remove the useless words from the question and keep only word that are in the corpus.
+
+        Args:
+            question (set[str]): The question to remove useless words from
+
+        Returns:
+            set[str]: The question without useless words.
+        """
+        return tokens.intersection(self.word_set).difference(self.compute_least_important_words())
+    
+    def question_tf_idf(self, question: str) -> dict:
+        """Compute the tf_idf of the question.
+
+        Args:
+            question (str): The question to compute the tf_idf of
+
+        Returns:
+            dict: The tf_idf of the question
+        """
+        tokens: set[str] = self.question_tokenization(question)
+        tokens = self.remove_useless_words(tokens)
+        question_tf_idf: dict = dict.fromkeys(self.word_set, 0)
+        
+        tokens_tf: dict = {word: question.count(word) / len(question) for word in tokens}
+        
+        
+        
+        for i in range(self.n_document):
+            for word in tokens: 
+                question_tf_idf[word] = tokens_tf[word] * self.idf[word]
+        print(question_tf_idf)
+
+
+functions = Functions()
+
+functions.question_tf_idf("Peux-tu me dire comment une nation peut-elle prendre soin du climat?")
+
