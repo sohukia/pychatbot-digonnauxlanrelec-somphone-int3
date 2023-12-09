@@ -131,10 +131,11 @@ class Utils:
                     # check if the char is alphanumeric
                     if word[i].isalnum():
                         final_word += word[i]
-                    # if the char is ' or -, check if it is betweens to char or not
-                    elif word[(i - 1) % len(word)].isalpha() and (word[i] == '-' or word[i] == '\'') and word[
-                        (i + 1) % len(word)].isalpha():
+                    # if the char is ' or -, check if it is betweens two char or not
+                    elif word[(i - 1) % len(word)].isalnum() and (word[i] == '-' or word[i] == '\'') and word[
+                        (i + 1) % len(word)].isalnum():
                         final_word += ' '
                 final_line.append(final_word)
             final_text.append((' '.join(final_line)).strip() + '\n')
         return final_text
+
