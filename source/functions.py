@@ -1,5 +1,6 @@
 import math
-import utils
+import source.utils as utils
+
 
 class Functions:
     """
@@ -365,9 +366,3 @@ class Functions:
             for word in tokens: 
                 question_tf_idf[word] = tokens_tf[word] * self.idf[word]
         print(question_tf_idf)
-
-
-functions = Functions()
-
-functions.question_tf_idf("Peux-tu me dire comment une nation peut-elle prendre soin du climat?")
-

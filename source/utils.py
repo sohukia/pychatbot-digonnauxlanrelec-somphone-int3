@@ -56,11 +56,7 @@ class Utils:
         Returns:
             A list of strings
         """
-        output_elements: list[str] = []
-        for element in elements:
-            if element not in output_elements:
-                output_elements.append(element)
-        return output_elements
+        return list(dict.fromkeys(elements).keys())
 
     @staticmethod
     def cat_file(file_list: list[str]) -> list[str]:

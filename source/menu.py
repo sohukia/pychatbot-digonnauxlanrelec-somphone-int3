@@ -1,7 +1,63 @@
+import source.functions as functions
+from source.ux import UX
+
+
 class Menu:
     def __init__(self):
-        pass
+        self.greet()
 
+        self.functions = functions.Functions()
+        self.selected_mode = None
+        self.select_mode()
+
+        if self.selected_mode == 1:
+            self.menu_part_1()
+        elif self.selected_mode == 2:
+            self.menu_chatbot()
+        else:
+            return
+
+    @staticmethod
+    def greet() -> None:
+        print("\n",
+              "\t ██████╗██╗  ██╗ █████╗ ████████╗██████╗  ██████╗ ████████╗\n",
+              "\t██╔════╝██║  ██║██╔══██╗╚══██╔══╝██╔══██╗██╔═══██╗╚══██╔══╝\n",
+              "\t██║     ███████║███████║   ██║   ██████╔╝██║   ██║   ██║   \n",
+              "\t██║     ██╔══██║██╔══██║   ██║   ██╔══██╗██║   ██║   ██║   \n",
+              "\t╚██████╗██║  ██║██║  ██║   ██║   ██████╔╝╚██████╔╝   ██║   \n",
+              "\t ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═════╝  ╚═════╝    ╚═╝   \n")
+
+    def select_mode(self) -> None:
+        mode = 0
+        while mode not in [1, 2]:
+            mode = int(input("\tPlease select a mode.\t\n\ti.e. Part 1 functionalities (1) or Chatbot (2) : "))
+        self.selected_mode = mode
+
+    def menu_part_1(self) -> None:
+
+        text_input = str("\tWhat action do you want to perform ?\n" +
+                         "\t (1) Display the name of the presidents.\n" +
+                         "\t (2) Display the most repeated word {president}.\n" +
+                         "\t (3) Display the word with highest tf_idf score. i.e. the most important word.\n" +
+                         "\t (4) Display the list of unimportant words.\n" +
+                         "\t (5) Search for {word} and display metadata.\n" +
+                         "\t (6) Look for who said {word} first.\n" +
+                         "\t >_ ")
+        while True:
+            action = 0
+            while action not in list(range(1, 6)):
+                action = int(input(text_input))
+                if action == 1:
+                    self.display_pres()
+                elif action == 2:
+                    pass
+
+    def display_pres(self) -> None:
+        UX.write(self.functions.president_names)
+
+
+    def menu_chatbot(self) -> None:
+        pass
 
 
 '''
@@ -33,20 +89,6 @@ class Menu:
         """
         os.system('cls') if platform.system() == "Windows" else os.system('clear')
 
-    # HEADER DISPLAY
-    def greet(self) -> None:
-        print(
-            f"""
-
-         ██████╗██╗  ██╗ █████╗ ████████╗██████╗  ██████╗ ████████╗
-        ██╔════╝██║  ██║██╔══██╗╚══██╔══╝██╔══██╗██╔═══██╗╚══██╔══╝
-        ██║     ███████║███████║   ██║   ██████╔╝██║   ██║   ██║   
-        ██║     ██╔══██║██╔══██║   ██║   ██╔══██╗██║   ██║   ██║   
-        ╚██████╗██║  ██║██║  ██║   ██║   ██████╔╝╚██████╔╝   ██║   
-         ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═════╝  ╚═════╝    ╚═╝   
-
-        {self.message}
-        """)
 
     # HELP DISPLAY
     def help(self, command="") -> None:

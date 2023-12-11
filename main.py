@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from source.functions import Functions
-
+from source.menu import Menu
 
 """
     Main program
@@ -16,5 +16,5 @@ if __name__ == '__main__':
     # MAIN
     # menu = Menu()
 
-    functions = Functions()
-    print(functions.words_said_by_all_presidents())
+    # functions = Functions()
+    menu = Menu()
