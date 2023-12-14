@@ -38,3 +38,12 @@ Selecting the best answer: The chatbot identifies the words in the corpus most s
 on their TF-IDF similarity score. It then selects the answer that contains the greatest number of these similar 
 words.
 Provide answer: The chatbot returns the selected answer as the answer to the question asked.
+
+
+#### How to read the code
+1. [utils.py](./source/utils.py) all the functions that are needed across files
+2. [functions.py](./source/functions.py) all the functions that deal with tf_idf
+3. [vector.py](./source/vector.py) useful to understand the CHATBOT FEATURES part
+4. [ui.py](./source/ui.py) just some text formatting
+5. [menu.py](./source/menu.py) main menu
+6. [chatbat.py](chatbot.py) program to run
