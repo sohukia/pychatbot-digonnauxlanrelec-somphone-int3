@@ -1,12 +1,14 @@
 import math
 import source.utils as utils
+from source.vector import Vector
 
 
 class Functions:
     """
     WHY A CLASS:
     The reason why we use a class is because we want to be able to call the same functions multiple times and reuse easily the data.
-    """ 
+    """
+
     def __init__(self):
         """
         The __init__ function is the constructor for the class. It initializes all the attributes
@@ -14,7 +16,7 @@ class Functions:
         The first thing it does is copy files with cleared content, which means that it copies
         all the text files from speeches to cleaned and removes any non-alphabetical characters from them.
         
-        Next, we create dictionnaries about president : their name_surname, and the list of their name with duplicates
+        Next, we create dictionaries about president : their name_surname, and the list of their name with duplicates
         and another one without duplicate. The list with duplicate is useful to browse a word within the text and gather meta-data
 
         Next, we create a list called corpus which contains the contents of every file in file_list.
@@ -23,7 +25,7 @@ class Functions:
         
         After that, we compute both tf of the corpus, it's idf and then the matrix td_idf
         """
-        
+
         self.utils = utils.Utils()
 
         # copy files with cleared content
@@ -140,7 +142,7 @@ class Functions:
         Returns:
             A dictionary of the tf-idf matrix
         """
-        matrix: dict = dict.fromkeys([i for i in range(self.n_document)], {})
+        matrix: dict = self.tf.copy()
         for word in self.word_set:
             for i in range(self.n_document):
                 matrix[i][word] = self.tf[i][word] * self.idf[word]
@@ -314,7 +316,7 @@ class Functions:
                 common_words.add(word)
 
         return common_words
-    
+
     ###############################
     ## CHATBOT RELATED FEATURES  ##
     ###############################
@@ -331,20 +333,20 @@ class Functions:
         output: list = question.lower().split()
         # remove \n trailing char in the list of words cleaned from the question
         output = list(map(lambda x: x.replace('\n', ''), self.utils.clear_content(output)))
-        if '' in output: output.remove('') # still unknown why there is an empty string in the list
+        if '' in output: output.remove('')  # still unknown why there is an empty string in the list
         return set(output)
 
     def remove_useless_words(self, tokens: set[str]) -> set[str]:
         """Remove the useless words from the question and keep only word that are in the corpus.
 
         Args:
-            question (set[str]): The question to remove useless words from
+            tokens (set[str]): The question to remove useless words from
 
         Returns:
             set[str]: The question without useless words.
         """
         return tokens.intersection(self.word_set).difference(self.compute_least_important_words())
-    
+
     def question_tf_idf(self, question: str) -> dict:
         """Compute the tf_idf of the question.
 
@@ -357,12 +359,27 @@ class Functions:
         tokens: set[str] = self.question_tokenization(question)
         tokens = self.remove_useless_words(tokens)
         question_tf_idf: dict = dict.fromkeys(self.word_set, 0)
-        
+
         tokens_tf: dict = {word: question.count(word) / len(question) for word in tokens}
-        
-        
-        
+
         for i in range(self.n_document):
-            for word in tokens: 
+            for word in tokens:
                 question_tf_idf[word] = tokens_tf[word] * self.idf[word]
-        print(question_tf_idf)
+        return question_tf_idf
+
+    def most_relevant_document(self, question: str) -> str:
+        """Find the most relevant document to the question.
+
+        Returns:
+            str: The most relevant document to the question
+        """
+        question_tf_idf: dict = self.question_tf_idf(question)
+        vector: Vector = Vector()
+        most_relevant_document: str = ""
+        score_max: float = 0.0
+        for i in range(self.n_document):
+            score = vector.similarity(question_tf_idf=question_tf_idf, document_tf_idf=self.matrix[i])
+            if score > score_max:
+                score_max = score
+                most_relevant_document = self.file_list[i]
+        return most_relevant_document
