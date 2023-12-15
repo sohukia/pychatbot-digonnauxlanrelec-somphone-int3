@@ -13,7 +13,7 @@ class UI:
     
     @staticmethod
     def write(text: str) -> None:
-        size = 70 if len(text) > 70 else len(text)
+        size = 70
         print(f"\t{top_left}{horizontal * size}{top_right}")
         if '\n' in text:
             modified_text: list = list(map(lambda x: textwrap.fill(x).split('\n'), text.split('\n')))
