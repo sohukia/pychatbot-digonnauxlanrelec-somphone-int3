@@ -1,3 +1,10 @@
+"""
+utils.py
+Authors: DIGONNAUX-LANRELEC Brewen, SOMPHONE Isabelle
+Goal: functions useful across documents
+"""
+
+
 import os
 import platform
 

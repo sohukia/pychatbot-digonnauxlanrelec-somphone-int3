@@ -1,6 +1,9 @@
 """
-TODO: create header with authors and role of the file
+menu.py
+Authors: DIGONNAUX-LANRELEC Brewen, SOMPHONE Isabelle
+Goal: create and manage the interface to execute the program.
 """
+
 
 
 import source.functions as functions

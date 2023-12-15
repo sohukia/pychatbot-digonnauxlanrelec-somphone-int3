@@ -1,3 +1,10 @@
+"""
+ui.py
+Authors: DIGONNAUX-LANRELEC Brewen, SOMPHONE Isabelle
+Goal: display fency frame around text. 
+"""
+
+
 import textwrap
 
 top_left: str = '╔'

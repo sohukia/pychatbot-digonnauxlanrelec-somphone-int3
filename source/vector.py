@@ -1,3 +1,10 @@
+"""
+vector.py
+Authors: DIGONNAUX-LANRELEC Brewen, SOMPHONE Isabelle
+Goal: define a class that will represent each tf idf matrix as a vector to compute similarities between a question and a text.
+"""
+
+
 class Vector:
     def __init__(self) -> None:
         pass

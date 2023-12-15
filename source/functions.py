@@ -1,3 +1,11 @@
+"""
+function.py
+Authors: DIGONNAUX-LANRELEC Brewen, SOMPHONE Isabelle
+Goal: main functionalities of the project, from tf_idf calculation to question tokkenization.
+"""
+
+
+
 import math
 import source.utils as utils
 from source.vector import Vector
