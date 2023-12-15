@@ -17,4 +17,6 @@ if __name__ == '__main__':
     # menu = Menu()
 
     # functions = Functions()
+    # print(functions.most_relevant_document("Peux-tu me dire comment une nation peut-elle prendre soin du climat ?"))
+
     menu = Menu()
