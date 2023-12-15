@@ -24,4 +24,3 @@ class UI:
             new_text[i] = '\t' + vertical + " " + new_text[i] + " " * (69 - len(new_text[i])) + vertical
         print('\n'.join(new_text))
         print(f"\t{bot_left}{horizontal * size}{bot_right}")
-        
