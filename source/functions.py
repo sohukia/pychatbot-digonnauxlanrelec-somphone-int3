@@ -218,7 +218,7 @@ class Functions:
         """
         The compute_highest_score function computes the highest score of each document and returns a set containing all words
         with the highest score.
-        Uses a set instead of a list to avoid duplicate word.
+        Use a set instead of a list to avoid duplicate word.
 
         Args:
             self: Refer to the instance of the class
@@ -288,7 +288,7 @@ class Functions:
     def first_to_say(self, word_to_search: str) -> int:
         """
         The first_to_say function takes a word as an argument and returns the index of the document in which it first appears.
-        If the word does not appear in any documents, then - 1 is returned.
+        If the word does not appear in any documents, then - 1 is returned (should never happen).
 
         Args:
             self: Represent the instance of the class
@@ -332,6 +332,7 @@ class Functions:
     def question_tokenization(self, question: str) -> set[str]:
         """
         Tokenize the question by splitting it into words.
+        A token is a word in the question.
 
         Args:
             question: The question to tokenize
@@ -359,6 +360,7 @@ class Functions:
 
     def question_tf_idf(self, question: str) -> dict:
         """Compute the tf_idf of the question.
+        Same method as for the document but the score is not into a matrix but as a single dict.
 
         Args:
             question (str): The question to compute the tf_idf of
@@ -379,6 +381,7 @@ class Functions:
 
     def most_relevant_document(self, question: str) -> str:
         """Find the most relevant document to the question.
+        Simple maximum comparison algorithm.
 
         Returns:
             str: The most relevant document to the question
@@ -410,6 +413,14 @@ class Functions:
         return max_word
     
     def select_starter(self, question: str) -> str:
+        """Select the right starter for the answer. Depends on the question starter.
+
+        Args:
+            question (str): The question to select starter
+
+        Returns:
+            str: starter of the answer
+        """
         starters: dict[str, str] = {
             "comment": "Après analyse, ",
             "pourquoi": "Car, ",
