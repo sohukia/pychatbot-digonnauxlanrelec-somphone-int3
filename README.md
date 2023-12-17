@@ -4,7 +4,7 @@
 ### How to use
 
 - In PyCharm :
-Configure usage of `python3.11` with script `chatbot.py`. Ensure the `Emulate terminal in output console` is enabled to avoid error message.
+Configure usage of `python3.11` with script `chatbot.py`. Ensure the `Emulate terminal in output console` is enabled to avoid error message. To do that, click on the `Current File` in the top left corner of the IDE and select `Edit Configurations...`. Then click on `Create new run configuration` and select `python`. Type `chatbot.py` in the script section. Then click on `Modify options` and add `Emulate terminal in output console`. Finally click `Apply` then `Ok`.
 - Within a terminal: type `./chatbot.py`
 - In VsCode: with `python` extension installed, open `chatbot.py` and click `run`
 
