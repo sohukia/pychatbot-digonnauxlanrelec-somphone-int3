@@ -14,30 +14,7 @@ Configure usage of `python3.11` with script `chatbot.py`. Ensure the `Emulate te
 
 
 ### Project description
-This project is about text analysis. This project will allow you to understand some basic concepts used in text 
-processing and help you understand one of the methods used in developing chatbots and/or generative 
-artificial intelligences such as ChatGPT. 
-Obviously, we're not talking here about manipulating neural networks, but in this project we're going to focus 
-on a method based on words occurrences to generate intelligent answers from a corpus of texts. The aim is to 
-design a system that can answer questions based on the frequency of words in the corpus. 
-This application is based on the following algorithm: 
-Data pre-processing: your program begins by collecting and pre-processing a set of documents in order to 
-understand the nature of their contents, before using them to prepare answers. This phase cleans up the text 
-by removing punctuation, converting letters to lower case, and dividing the text into words (or "tokens").
-Creating a TF-IDF matrix: For each unique word in the documents, you'll need to calculate a TF-IDF vector 
-using the TF-IDF method. Each word is associated with a vector whose dimension is equal to the number of 
-documents in the corpus. This creates a TF-IDF matrix where each row represents a word and each column 
-represents a document.
-Question representation: When a question is asked, the chatbot performs the same pre-processing on the 
-question. It then calculates a TF-IDF vector for this question, using the same vocabulary as the documents. The 
-question vector has the same dimension as the vectors associated with the words in the corpus.
-Similarity calculation: The chatbot calculates the similarity between the question vector and the word vectors 
-in the corpus, using cosine similarity or another similarity measure. This enables it to determine which words 
-in the corpus are most similar to the question.
-Selecting the best answer: The chatbot identifies the words in the corpus most similar to the question, based 
-on their TF-IDF similarity score. It then selects the answer that contains the greatest number of these similar 
-words.
-Provide answer: The chatbot returns the selected answer as the answer to the question asked.
+This project is about creating a chatbot, a program that can simulate a conversation with a user. The chatbot uses a corpus of text in `./speeches`, a list of sentences that it will use to find the best answer to the user's input. The user can also ask for a specific sentence from the corpus. The chatbot can also be used as a simple search engine, it will return a list of sentences that contains the user's input.
 
 
 #### How to read the code
@@ -47,3 +24,18 @@ Provide answer: The chatbot returns the selected answer as the answer to the que
 4. [ui.py](./source/ui.py) just some text formatting
 5. [menu.py](./source/menu.py) main menu
 6. [chatbat.py](chatbot.py) program to run
+
+#### Eases during the programming process
+- Name properly the variables
+- Document the code
+- `Vector` class was easy to create once we had understand how data were structured
+- File manipulation is also pretty easy since Brewen had already worked on such things in other projects.
+- Structure the code, even though it could have been better the readability is always an objective while writing.
+- Duplicate deletion ! We learn a new method : convert the list into a dictionary so that the keys are unique, keeping the same order (instead of using a set which do not keep order) and convert into a list the keys of this dictionary. 
+
+#### The problems faced during the programming process
+- Input function not recognize the character "-" in utf-8, we had to rewrite a new function that encode and decode utf-8 properly
+- A word is found in the corpus but shouldn't even exists : "". We had to write a specific instruction to avoid errors with this word.
+- Computation of the tf_idf matrix was difficult since there was an error : all the values were the same ! The issue came from a single line `matrix: dict = self.tf.copy()` was the right way to create the empty dictionnary.
+- Code and memory usage optimisation were hard to tackle, we had to rewrite the whole codebase to use OOP paradygm which was better and easier to work on.
+- Find the right way to display a fency menu.
