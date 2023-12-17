@@ -8,8 +8,6 @@ Configure usage of `python3.11` with script `chatbot.py`. Ensure the `Emulate te
 - Within a terminal: type `./chatbot.py`
 - In VsCode: with `python` extension installed, open `chatbot.py` and click `run`
 
-#### To start using the chatbot run the command `--help`, it will give the main commands and how to use them.
-
 ### Link of the Github repository [here](https://github.com/sohukia/pychatbot-digonnauxlanrelec-somphone-int3.git)
 
 
