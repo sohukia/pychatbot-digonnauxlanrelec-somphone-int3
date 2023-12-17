@@ -4,6 +4,10 @@ Authors: DIGONNAUX-LANRELEC Brewen, SOMPHONE Isabelle
 Goal: display fency frame around text. 
 """
 
+##########################################
+## WARNING THIS CODE IS NOT DOCUMENTED  ##
+## SINCE IT SHOULD NOT BE REPLICATED    ##
+##########################################
 
 import textwrap
 
