@@ -4,27 +4,31 @@ Authors: DIGONNAUX-LANRELEC Brewen, SOMPHONE Isabelle
 Goal: create and manage the interface to execute the program.
 """
 
-
-
+import os
+import platform
 import source.functions as functions
 from source.ui import UI
+from source.utils import Utils
 
 
 class Menu:
     def __init__(self):
+        # clear terminal before showing our chatbot
+        os.system('cls') if platform.system() == "Windows" else os.system("clear")
         self.greet()
 
+        # initialize the backend
         self.functions = functions.Functions()
+        # select a mode
         self.selected_mode = None
         self.select_mode()
-
+        # execute program
         if self.selected_mode == 1:
             self.menu_part_1()
         elif self.selected_mode == 2:
             self.menu_chatbot()
         else:
             return
-        
 
     @staticmethod
     def greet() -> None:
@@ -44,7 +48,7 @@ class Menu:
         """
         mode = 0
         while mode not in [1, 2]:
-            mode = int(input("\tPlease select a mode.\t\n\ti.e. Part 1 functionalities (1) or Chatbot (2) : "))
+            mode = int(Utils.my_input("\tPlease select a mode.\t\n\ti.e. Part 1 functionalities (1) or Chatbot (2) : "))
         self.selected_mode = mode
 
     def menu_part_1(self) -> None:
@@ -68,18 +72,21 @@ class Menu:
             " (5) Search for {word} and display metadata.\n" +
             " (6) Look for who said {word} first.\n"
         )
-        
+
         while True:
             action = 0
             while action not in list(range(1, 7)):
                 try:
                     UI.write(text_input)
-                    action = int(input("\t>_ "))
+                    action = int(Utils.my_input("\t>_ "))
                 except ValueError:
                     UI.write("Please input a number !")
 
             actions[action]()
 
+    ######################
+    ## PART 1 FUNCTIONS ##
+    ######################
     def convert_names(self) -> str:
         """Convert president name dictionary into a printable string.
 
@@ -87,18 +94,17 @@ class Menu:
             str: name and surname on multiple lines
         """
         return "\n".join([" ".join([name, surname]) for name, surname in self.functions.president_names.items()])
-    
-    
-    def most_repeated_display(self) -> None:
+
+    def most_repeated_display(self) -> str:
         """Display the most repeated word by a given president
         """
 
         president = ""
         while president not in self.functions.president_names:
             presidents_list_formatted: str = " - " + "\n\t - ".join(self.functions.president_list)
-            president = input(
+            president = Utils.my_input(
                 f"\tPlease enter the president you want (must be in this list)\n\t{presidents_list_formatted}\n\t>_ ")
-        return self.functions.most_repeated_word_by(self.functions.president_list.index(president))
+        return f"The most repeated word by {president} is \"" + self.functions.most_repeated_word_by(self.functions.president_list.index(president)) + '"'
 
     def search_word(self) -> str:
         """Input to search a word, then convert it into a printable value: who said the word and who said it first.
@@ -107,16 +113,16 @@ class Menu:
         """
         word: str = ""
         while word not in self.functions.word_set:
-            word = input("\tInput the word you are looking for :\n\t>_ ")
+            word = Utils.my_input("\tInput the word you are looking for :\n\t>_ ")
         # save the positions of the files where they are located
-        poses: list = self.functions.search_word(word)
+        poses: tuple[list[int], int] = self.functions.search_word(word)
         # convert these position into president names
-        presidents_who_said: str = '\n'.join([self.functions.president_list_with_duplicates[poses[0][i]] for i in range(len(poses[0]))])
+        presidents_who_said: str = '\n'.join(
+            [self.functions.president_list_with_duplicates[poses[0][i]] for i in range(len(poses[0]))])
         output: str = f"The president who said \"{word}\" are:\n{presidents_who_said}\nAnd {self.functions.president_list_with_duplicates[poses[1]]} said it first in the corpus"
-        
+
         return output
-        
-    
+
     def who_said_first(self) -> str:
         """Return the name of the president that firstly said a the word prompted.
 
@@ -125,21 +131,35 @@ class Menu:
         """
         word: str = ""
         while word not in self.functions.word_set:
-            word = input("\tInput the word you are looking for :\n\t>_ ")
+            word = Utils.my_input("\tInput the word you are looking for :\n\t>_ ")
         return f"The first president who said \"{word}\" is {self.functions.president_list_with_duplicates[self.functions.first_to_say(word)]}"
-        
+
     def most_important(self) -> str:
         """Return the most important(s) word(s) in the whole corpus as a string.
 
         Returns:
             str: printable with UI module
         """
-        return "The most important(s) word(s) of the corpus is/are :\n" + "\n".join(self.functions.compute_highest_score())
-    
+        return "The most important(s) word(s) of the corpus is/are :\n" + "\n".join(
+            self.functions.compute_highest_score())
+
     def unimportant(self) -> str:
         """Return the least important words in the whole corpus as a string.
 
         Returns:
             str: printable with UI module
         """
-        return "The least important(s) word(s) of the corpus is/are :\n" + "\n".join(self.functions.compute_least_important_words())
+        return "The least important(s) word(s) of the corpus is/are :\n" + "\n".join(
+            self.functions.compute_least_important_words())
+
+    #######################
+    ## CHATBOT FUNCTIONS ##
+    #######################
+    def menu_chatbot(self) -> None:
+        """Chatbot features menu
+        """
+        while True:
+            UI.write("Ask any question about the president's nominations (warning, the question must be in French !)")
+            question: str = Utils.my_input("\t>_ ")
+            response: str = self.functions.generate_response(question)
+            UI.write(response)
