@@ -1,3 +1,10 @@
+"""
+utils.py
+Authors: DIGONNAUX-LANRELEC Brewen, SOMPHONE Isabelle
+Goal: functions useful across documents
+"""
+
+
 import os
 import platform
 
@@ -90,7 +97,11 @@ class Utils:
         """
         if not os.path.exists(os.path.abspath(dir_name)):
             os.mkdir(os.path.abspath(dir_name))
-
+    
+    @staticmethod
+    def check_cleaned() -> bool:
+        return os.path.exists(os.path.abspath('./cleaned'))
+    
     @staticmethod
     def path_separator() -> str:
         """
@@ -135,3 +146,16 @@ class Utils:
             final_text.append((' '.join(final_line)).strip() + '\n')
         return final_text
 
+    @staticmethod
+    def my_input(text: str) -> str:
+        """
+        The my_input function takes a string as input and returns a string.
+        It is used to replace the input() function to avoid UnicodeDecodeError.
+
+        Args:
+            text: str: Store the text to be displayed
+
+        Returns:
+            A string
+        """
+        return input(text).encode('utf-8').decode('utf-8')

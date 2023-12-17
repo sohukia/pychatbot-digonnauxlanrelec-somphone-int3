@@ -1,3 +1,10 @@
+"""
+ui.py
+Authors: DIGONNAUX-LANRELEC Brewen, SOMPHONE Isabelle
+Goal: display fency frame around text. 
+"""
+
+
 import textwrap
 
 top_left: str = '╔'
@@ -13,7 +20,7 @@ class UI:
     
     @staticmethod
     def write(text: str) -> None:
-        size = 70 if len(text) > 70 else len(text)
+        size = 70
         print(f"\t{top_left}{horizontal * size}{top_right}")
         if '\n' in text:
             modified_text: list = list(map(lambda x: textwrap.fill(x).split('\n'), text.split('\n')))
@@ -24,4 +31,3 @@ class UI:
             new_text[i] = '\t' + vertical + " " + new_text[i] + " " * (69 - len(new_text[i])) + vertical
         print('\n'.join(new_text))
         print(f"\t{bot_left}{horizontal * size}{bot_right}")
-        

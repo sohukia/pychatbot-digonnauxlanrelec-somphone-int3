@@ -1,3 +1,10 @@
+"""
+function.py
+Authors: DIGONNAUX-LANRELEC Brewen, SOMPHONE Isabelle
+Goal: main functionalities of the project, from tf_idf calculation to question tokenization.
+"""
+
+import re
 import math
 import source.utils as utils
 from source.vector import Vector
@@ -6,7 +13,7 @@ from source.vector import Vector
 class Functions:
     """
     WHY A CLASS:
-    The reason why we use a class is because we want to be able to call the same functions multiple times and reuse easily the data.
+    The reason why we use a class is that we want to be able to call the same functions multiple times and reuse easily the data.
     """
 
     def __init__(self):
@@ -28,8 +35,9 @@ class Functions:
 
         self.utils = utils.Utils()
 
-        # copy files with cleared content
-        self.copy_files(self.utils.list_files("./speeches", "txt"))
+        # copy files with cleared content, do not execute if folder alread exists
+        if not self.utils.check_cleaned():
+            self.copy_files(self.utils.list_files("./speeches", "txt"))
         self.file_list: list[str] = self.utils.list_files("./cleaned", "txt")
 
         # president data
@@ -46,6 +54,7 @@ class Functions:
         self.tf: dict = self.term_frequency_corpus()
         self.idf: dict = self.inverse_document_frequency()
         self.matrix: dict = self.td_idf()
+        
 
     def copy_files(self, filenames: list[str]) -> None:
         """
@@ -230,7 +239,7 @@ class Functions:
                     highest.add(word)
         return highest
 
-    def search_word(self, word_to_search: str) -> tuple[list[int], int]:
+    def search_word(self, word_to_search: str) -> tuple[list[int], int] or None:
         """
         The search_word function takes a word as input and looks for a word into the corpus. Find both
         who said this word_to_search and who said it the most.
@@ -333,7 +342,8 @@ class Functions:
         output: list = question.lower().split()
         # remove \n trailing char in the list of words cleaned from the question
         output = list(map(lambda x: x.replace('\n', ''), self.utils.clear_content(output)))
-        if '' in output: output.remove('')  # still unknown why there is an empty string in the list
+        if '' in output:
+            output.remove('')  # still unknown why there is an empty string in the list
         return set(output)
 
     def remove_useless_words(self, tokens: set[str]) -> set[str]:
@@ -383,3 +393,52 @@ class Functions:
                 score_max = score
                 most_relevant_document = self.file_list[i]
         return most_relevant_document
+
+    def question_compute_highest_score(self, question: str) -> str:
+        """Look for the word with the highest tf_idf score in the question.
+
+        Returns:
+            str: This word
+        """
+        question_score: dict = self.question_tf_idf(question)
+        max_score: float = 0.0
+        max_word: str = ""
+        for word, score in question_score.items():
+            if score > max_score and word != 'comment':
+                max_score = score
+                max_word = word
+        return max_word
+    
+    def select_starter(self, question: str) -> str:
+        starters: dict[str, str] = {
+            "comment": "Après analyse, ",
+            "pourquoi": "Car, ",
+            "peux-tu": "Oui, bien sûr ! ",
+        }
+        question_starter: str = question.lower().split()[0]
+        return starters[question_starter] if question_starter in starters.keys() else ""
+
+    def generate_response(self, question: str) -> str:
+        """Generate the response of the bot using the document with the similarity and the most relevant word.
+        Use regular expression to match the word in the text and output the longest paragraph containing this word.
+
+        Args:
+            question (str): the question to answer
+
+        Returns:
+            str: the generated response
+        """
+        most_relevant_word: str = self.question_compute_highest_score(question)
+        most_relevant_document: int = self.file_list.index(self.most_relevant_document(question))
+
+        with open(utils.Utils.list_files('./speeches', 'txt')[most_relevant_document]) as file:
+            content: str = ' '.join(file.readlines())
+
+        pattern: str = r"(?i).*\b"+most_relevant_word+r"*\w.*"
+        pattern_regex: re.Pattern = re.compile(pattern, re.IGNORECASE)
+
+        match: list[str] = pattern_regex.findall(content)
+        if match:
+            return self.select_starter(question) + max(match, key=lambda x: len(x))
+
+        return "No match found."
