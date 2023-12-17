@@ -4,9 +4,9 @@
 ### How to use
 
 - In PyCharm :
-Configure usage of `python3.11` with script `main.py`. Ensure the `Emulate terminal in output console` is enabled to avoid error message.
-- Within a terminal: type `python3 main.py`
-- In VsCode: with `python` extension installed, open `main.py` and click `run`
+Configure usage of `python3.11` with script `chatbot.py`. Ensure the `Emulate terminal in output console` is enabled to avoid error message.
+- Within a terminal: type `./chatbot.py`
+- In VsCode: with `python` extension installed, open `chatbot.py` and click `run`
 
 #### To start using the chatbot run the command `--help`, it will give the main commands and how to use them.
 
