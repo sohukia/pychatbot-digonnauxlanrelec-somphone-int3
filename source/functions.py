@@ -442,7 +442,7 @@ class Functions:
         most_relevant_word: str = self.question_compute_highest_score(question)
         most_relevant_document: int = self.file_list.index(self.most_relevant_document(question))
 
-        with open(utils.Utils.list_files('./speeches', 'txt')[most_relevant_document]) as file:
+        with open(utils.Utils.list_files('./speeches', 'txt')[most_relevant_document], encoding='utf-8') as file:
             content: str = ' '.join(file.readlines())
 
         pattern: str = r"(?i).*\b"+most_relevant_word+r"*\w.*"
