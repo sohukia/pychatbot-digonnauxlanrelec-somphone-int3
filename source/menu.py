@@ -32,7 +32,7 @@ class Menu:
 
     @staticmethod
     def greet() -> None:
-        """Display a fency text at startup
+        """Display a fancy text at startup
         """
         print(
             "\n",

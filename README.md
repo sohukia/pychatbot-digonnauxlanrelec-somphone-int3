@@ -36,4 +36,4 @@ This project is about creating a chatbot, a program that can simulate a conversa
 - A word is found in the corpus but shouldn't even exists : "". We had to write a specific instruction to avoid errors with this word.
 - Computation of the tf_idf matrix was difficult since there was an error : all the values were the same ! The issue came from a single line `matrix: dict = self.tf.copy()` was the right way to create the empty dictionnary.
 - Code and memory usage optimisation were hard to tackle, we had to rewrite the whole codebase to use OOP paradygm which was better and easier to work on.
-- Find the right way to display a fency menu.
+- Find the right way to display a fancy menu.

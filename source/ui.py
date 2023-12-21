@@ -1,7 +1,7 @@
 """
 ui.py
 Authors: DIGONNAUX-LANRELEC Brewen, SOMPHONE Isabelle
-Goal: display fency frame around text. 
+Goal: display fancy frame around text. 
 """
 
 ##########################################
